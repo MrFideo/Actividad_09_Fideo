@@ -1,38 +1,41 @@
-import java.util.Scanner; // Importa la clase Scanner para leer la entrada del teclado
+import java.util.Scanner;
 
 public class Main {
-    private static Scanner scanner = new Scanner(System.in); // Crea un objeto Scanner para leer entradas
-    private static Deck deck = new Deck(); // Crea un objeto Deck que contiene el mazo de cartas
+    private static Scanner scanner = new Scanner(System.in);
+    private static Deck deck = new Deck();
 
-    // Método principal del programa
     public static void main(String[] args) {
-        int option; // Variable para almacenar la opción seleccionada por el usuario
+        int option;
         do {
-            option = showMenu(); // Muestra el menú y recibe la opción del usuario
-            switch (option) { // Estructura switch para manejar las diferentes opciones
-                case 1: // Opción para mezclar el mazo
-                    deck.shuffle();
-                    break;
-                case 2: // Opción para sacar la primera carta
-                    deck.head();
-                    break;
-                case 3: // Opción para seleccionar una carta al azar
-                    deck.pick();
-                    break;
-                case 4: // Opción para generar una mano de cinco cartas
-                    deck.hand();
-                    break;
-                case 0: // Opción para salir del programa
-                    System.out.println("Gracias por jugar Poker!");
-                    break;
-                default: // Manejo de cualquier opción no definida
-                    System.out.println("Opción no válida.");
+            try {
+                option = showMenu();  // Intenta obtener una opción del menú; puede lanzar una excepción
+                switch (option) {
+                    case 1:
+                        deck.shuffle();
+                        break;
+                    case 2:
+                        deck.head();  // Intenta sacar la primera carta; puede lanzar excepción de mazo vacío
+                        break;
+                    case 3:
+                        deck.pick();  // Intenta sacar una carta al azar; maneja excepción de mazo vacío
+                        break;
+                    case 4:
+                        deck.hand();  // Intenta generar una mano de 5 cartas; maneja excepción de mazo insuficiente
+                        break;
+                    case 0:
+                        System.out.println("Gracias por jugar Poker!");
+                        break;
+                }
+            } catch (Exception e) {  // Captura las excepciones lanzadas en el bloque try
+                System.out.println(e.getMessage());  // Muestra el mensaje de la excepción
+                if (e.getMessage().equals("Se han agotado las cartas")) {
+                    break;  // Termina el programa si se acaban las cartas
+                }
             }
-        } while (option != 0); // Repite el menú hasta que el usuario decida salir
+        } while (true);  // Repite hasta que el usuario decida salir
     }
 
-    // Método para mostrar el menú y capturar la elección del usuario
-    private static int showMenu() {
+    private static int showMenu() throws Exception {  // Método ahora puede lanzar excepciones
         System.out.println("\nBienvenido a Poker!");
         System.out.println("Selecciona una opción:");
         System.out.println("1 Mezclar deck");
@@ -42,10 +45,11 @@ public class Main {
         System.out.println("0 Salir");
         System.out.print("Opción: ");
 
-        while (!scanner.hasNextInt()) {
-            scanner.next(); // Limpia el buffer si la entrada no es un entero
-            System.out.println("Por favor, introduce un número válido.");
+        int option = scanner.nextInt();  // Lee la opción del usuario
+
+        if (option < 0 || option > 4) {  // Valida la opción
+            throw new Exception("Opción no válida");  // Lanza una excepción si la opción es inválida
         }
-        return scanner.nextInt(); // Devuelve la opción numérica seleccionada
+        return option;
     }
 }

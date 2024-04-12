@@ -18,37 +18,37 @@ public class Deck {
         }
     }
 
-    // Método para mezclar el mazo de cartas
     public void shuffle() {
-        Collections.shuffle(cards); // Utiliza Collections.shuffle para mezclar las cartas aleatoriamente
+        Collections.shuffle(cards);  // Baraja las cartas usando un método de la biblioteca Collections
         System.out.println("Se mezcló el Deck.");
     }
 
-    // Método para sacar la primera carta del mazo
-    public void head() {
-        if (!cards.isEmpty()) {
-            Card card = cards.remove(0); // Elimina y retorna la primera carta del mazo
-            System.out.println(card);
-            System.out.println("Quedan " + cards.size());
+    public void head() throws Exception {  // Agregado 'throws Exception' para manejar la posibilidad de mazo vacío
+        if (cards.isEmpty()) {
+            throw new Exception("Se han agotado las cartas");  // Lanza una excepción si no hay cartas para sacar
         }
+        Card card = cards.remove(0);  // Remueve la primera carta del mazo
+        System.out.println(card);
+        System.out.println("Quedan " + cards.size());
     }
 
-    // Método para seleccionar una carta al azar del mazo
-    public void pick() {
-        if (!cards.isEmpty()) {
-            int index = new Random().nextInt(cards.size()); // Genera un índice aleatorio
-            Card card = cards.remove(index); // Elimina y retorna la carta en el índice generado
-            System.out.println(card);
-            System.out.println("Quedan " + cards.size());
+    public void pick() throws Exception {  // Agregado 'throws Exception' para manejar la posibilidad de mazo vacío
+        if (cards.isEmpty()) {
+            throw new Exception("Se han agotado las cartas");  // Lanza una excepción si no hay cartas para sacar
         }
+        int index = new Random().nextInt(cards.size());  // Selecciona un índice aleatorio para la carta a sacar
+        Card card = cards.remove(index);  // Remueve la carta seleccionada del mazo
+        System.out.println(card);
+        System.out.println("Quedan " + cards.size());
     }
 
-    // Método para generar una mano de cinco cartas
-    public void hand() {
+    public void hand() throws Exception {  // Agregado 'throws Exception' para manejar la posibilidad de mazo insuficiente
+        if (cards.size() < 5) {
+            throw new Exception("Se han agotado las cartas");  // Lanza una excepción si no hay suficientes cartas para una mano
+        }
         for (int i = 0; i < 5; i++) {
-            if (!cards.isEmpty()) {
-                pick(); // Llama al método pick cinco veces para seleccionar cinco cartas
-            }
+            this.pick();  // Reutiliza el método pick para sacar cinco cartas
         }
     }
 }
+
